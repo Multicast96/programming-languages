@@ -1,2 +1,2 @@
 # programming-languages
-Repozytorium zawierające moje próby w różnych językach programowania.
+Repozytorium przeznaczone do doskonalenia moich umiejętność związanych z językami C,C++,Python,JAVA,C#
