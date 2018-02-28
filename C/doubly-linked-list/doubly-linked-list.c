@@ -24,8 +24,6 @@ void push_front(element *head, int key) {
 	
 	if(head->next != NULL) ((element *)head->next)->previous = tmp;
 	head->next = tmp;
-	
-	head->key++; //num of elements in list
 }
 
 void push_back(element *head, int key) {
@@ -67,6 +65,7 @@ int main() {
 	remove_key(&list, 1);
 	print_list(&list);
 	remove_key(&list, 10);
+	remove_key(&list, 100);
 	print_list(&list);
 	return 0;
 }
