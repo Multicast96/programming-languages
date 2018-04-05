@@ -17,7 +17,8 @@ public class ImageProcessingJob {
     enum Status{
         WAITING,
         PROCESSING,
-        DONE
+        DONE,
+        ERROR
     }
     private SimpleStringProperty status;
     private DoubleProperty progess;
@@ -31,6 +32,14 @@ public class ImageProcessingJob {
 
     public SimpleStringProperty getStatusProperty(){
         return status;
+    }
+
+    public void setStatusProperty(Status s){
+        status.set(s.toString());
+
+        if(s == Status.WAITING){
+            progess.setValue(0);
+        }
     }
 
     public DoubleProperty getProgessProperty() {
@@ -76,8 +85,10 @@ public class ImageProcessingJob {
 
             //zapisanie zawartości bufora do pliku na dysku
             ImageIO.write(grayscale, "jpg", outputPath.toFile());
+            setStatusProperty(Status.DONE);
         } catch (IOException ex) {
             //translacja wyjątku
+            setStatusProperty(Status.ERROR);
             throw new RuntimeException(ex);
         }
     }
