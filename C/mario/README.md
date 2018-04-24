@@ -12,8 +12,8 @@ Classic mario implementation for Programming Basis class project.
 * Up Arrow - Jump
 * N - New Game
 * S - Save
-- L - Load
-- ESC - exit
+* L - Load
+* ESC - exit
 
 ## Technology
 - C
