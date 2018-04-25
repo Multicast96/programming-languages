@@ -6,7 +6,7 @@
 //a1 = 5 + e | e = 2 | czwarta cyfra indeksu
 //a2 = a3 = -1
 //f = 5 | trzecia cyfra indeksu
-const int N = 927;
+int N = 20;
 matrix A,b,x;
 
 void init() {
@@ -32,16 +32,54 @@ void measureExecTime(int (*fun)(matrix&, matrix&, matrix&, double), matrix& A, m
 	int iters = fun(A,x,b,precision);
 	auto end = chrono::system_clock::now();
 	auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start);
-	cout << "Liczba iteracji: " << iters << endl;
-	cout << "Czas: " << elapsed.count() <<" ms"<< endl;
+	cout << "N = "<<A.y<<" Liczba iteracji: " << iters<<" Czas: " << elapsed.count() <<" ms"<< endl;
 }
 
 int main() {
 	try {
+		cout << "Zad A" << endl;
+		N = 15;
+		dataForTaskA();
+		cout << A << endl << endl;;
+		cout << "Zad B" << endl;
+		N = 927;
+		dataForTaskA();
+		measureExecTime(gauss_seidl, A, x, b, 1e-9);
+		dataForTaskA();
+		measureExecTime(jacobi, A, x, b, 1e-9);
+
+		cout << endl << "Zad C" << endl;
 		dataForTaskC();
 		measureExecTime(gauss_seidl, A, x, b, 1e-9);
 		dataForTaskC();
 		measureExecTime(jacobi, A, x, b, 1e-9);
+
+		cout << endl << "Zad D" << endl;
+		dataForTaskC();
+		measureExecTime(faktoryzacja_LU, A, x, b, 0);
+		cout << "Norma z residuum wynosi 0" << endl;
+
+		cout << endl << "Zad E" << endl;
+
+		const int values[] = { 100,500,1000,2000,3000 };
+
+		for (int i = 0; i < sizeof(values) / sizeof(int); i++) {
+			N = values[i];
+			dataForTaskA();
+			measureExecTime(jacobi, A, x, b, 1e-9);
+		}
+
+		for (int i = 0; i < sizeof(values) / sizeof(int); i++) {
+			N = values[i];
+			dataForTaskA();
+			measureExecTime(gauss_seidl, A, x, b, 1e-9);
+		}
+
+		for (int i = 0; i < sizeof(values) / sizeof(int); i++) {
+			N = values[i];
+			dataForTaskA();
+			measureExecTime(faktoryzacja_LU, A, x, b, 0);
+		}
 	}
 	catch (exception &e) {
 		cout << e.what() << endl;

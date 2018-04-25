@@ -33,8 +33,60 @@ double residuum_norm(matrix &A, matrix &x, matrix& b) {
 	return sqrt(norm);
 }
 
+int faktoryzacja_LU(matrix &A, matrix& x, matrix& b, double precision) {
+	cout << "Faktoryzacja LU  ";
+	const int N = A.y;
+	matrix L(N, N);
+	matrix U(N, N);
+	for (int i = 0; i < N; i++) L[i][i] = 1;
+
+	//Podzia³ na L i U
+	for (int i = 0; i < N; i++) {
+		for (int j = i; j < N; j++) {
+			U[i][j] += A[i][j];
+			for (int k = 0; k <= i - 1; k++) {
+				U[i][j] -= L[i][k] * U[k][j];
+			}
+		}
+
+		for (int j = i + 1; j < N; j++) {
+			for (int k = 0; k <= i - 1; k++) {
+				L[j][i] -= L[j][k] * U[k][i];
+			}
+			L[j][i] += A[j][i];
+			L[j][i] /= U[i][i];
+		}
+	}
+
+	//Ly=b
+	for (int i = 0; i < N; i++) {
+		x[i][0] = b[i][0];
+		for (int j = 0; j < i; j++) {
+			x[i][0] -= L[i][j] * x[j][0];
+		}
+		for (int j = i + 1; j < N; j++) {
+			x[i][0] -= L[i][j] * x[j][0];
+		}
+		x[i][0] /= L[i][i];
+	}
+
+	//Ux=y
+	for (int i = N-1; i >= 0; i--){
+		x[i][0] = x[i][0];
+		for (int j = N-1; j > i; j--) {
+			x[i][0] -= U[i][j] * x[j][0];
+		}
+		for (int j = i - 1; j >= 0; j--) {
+			x[i][0] -= U[i][j] * x[j][0];
+		}
+		x[i][0] /= U[i][i];
+	}
+
+	return 0;
+}
+
 int gauss_seidl(matrix & A, matrix & x, matrix & b, double precision){
-	cout << "Gauss seidl" << endl;
+	cout << "Gauss seidl      ";
 	int iter = 0;
 	double res = 1;
 	while (res >= precision) {
@@ -50,13 +102,12 @@ int gauss_seidl(matrix & A, matrix & x, matrix & b, double precision){
 		}
 		res = residuum_norm(A, x, b);
 		++iter;
-
 	}
 	return iter;
 }
 
 int jacobi(matrix & A, matrix & x, matrix & b, double precision) {
-	cout << "Jacobi" << endl;
+	cout << "Jacobi           ";
 	int iter = 0;
 	double res = 1;
 	while (res >= precision) {
